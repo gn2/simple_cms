@@ -3,7 +3,7 @@ author:
   email: adrien@gn2.fr
   
 layout:
-  name: default
+  name: example
 
 layout_parts:
   - name: title
