@@ -1,0 +1,49 @@
+-content_for :sidebar do
+  -if current_object && current_object.kind_of?(Page) && !current_object.new_record?
+    %h3 This page...
+    %ul.top
+      %li
+        = "is #{current_object.nice_state} &mdash;"
+        -if current_object.state=='draft'
+          =link_to "Publish?", publish_admin_page_path(current_object), :method => :put
+        -if current_object.state=='published'
+          =link_to "Make draft?", hide_admin_page_path(current_object), :method => :put
+      %li= "is <strong>#{"not " unless current_object.visible? }visible</strong>"
+      %li= "uses the <strong>#{current_object.layout.name} layout</strong>"
+      %li= "has been created #{distance_of_time_in_words_to_now(current_object.created_at)} ago"
+      %li= "has been last updated #{distance_of_time_in_words_to_now(current_object.updated_at)} ago"
+      -#TODO: add preview for drafts
+      %li=link_to "View this page (only if visible)", current_object.url
+      %li=link_to "Delete this page", admin_page_path(current_object), :method => :delete, :confirm => "Are your sure?"
+
+    %h3 
+      Children 
+      %span (drag & drop to re-order)
+    %ul.top
+      -current_object.children.each do |child|
+        %li= link_to child.title.titlecase, admin_page_path(child)
+      -if current_object.children.size.zero?
+        %li This page has no children
+
+    %h3 
+      Assets 
+      %span (click thumbnail to preview)
+    %ul.top
+      -if current_object.missing_assets_count > 0
+        %li
+          %strong #{pluralize(current_object.missing_assets_count, 'asset is', 'assets are')} missing
+      -else
+        %li #{current_object.associated_assets_count} thumbnails...
+      %li= link_to "Manage assets", admin_page_assets_path(current_object), :id => 'manage_assets'
+
+  -else
+
+    %h3 Actions
+    %ul.top
+      %li=link_to "View all pages", admin_pages_path
+    %ul.top
+      %li
+        Create a new page with the following layout:
+        %ul
+          -@layouts.each do |l|
+            %li=link_to l.name, new_admin_page_path(:layout => l.id)

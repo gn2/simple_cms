@@ -1,0 +1,16 @@
+author:
+  name: Adrien
+  email: adrien@gn2.fr
+  
+layout:
+  name: default
+
+layout_parts:
+  - name: title
+    content_type: string
+  - name: subtitle
+    content_type: string
+  - name: photo
+    content_type: image
+  - name: description
+    content_type: text

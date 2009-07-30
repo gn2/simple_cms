@@ -1,0 +1,8 @@
+-page_title("#{pages_breadcrumbs(current_object)}")
+=render :partial => 'sidebar'
+
+.form_holder
+  -form_for( current_object, :url => admin_page_path(current_object, :layout => current_object.layout_id) ) do |f|
+    =render :partial => "form", :locals => { :f => f }
+    %p.submit
+      =f.submit "Save your changes"

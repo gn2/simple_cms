@@ -1,0 +1,28 @@
+Simple-cms
+==========
+
+Dependencies:
+config.gem "haml"
+config.gem "faker"
+config.gem "mocha"
+config.gem "jchupp-is_paranoid", :lib => 'is_paranoid', :version => ">= 0.0.1"
+config.gem "rubyist-aasm", :lib => 'aasm', :version => ">= 0.0.1"
+config.gem "mislav-will_paginate", :lib => 'will_paginate'
+config.gem "vigetlabs-acts_as_markup", :lib => 'acts_as_markup'
+
+Plugins:
+make_resourceful
+simple_config
+simple_state_machine_history
+acts_as_tree
+permalink_fu
+paperclip
+paperclippolymorph
+
+Example
+=======
+
+Example goes here.
+
+
+Copyright (c) 2009 Adrien (adrien@gn2.fr), released under the GPLv3 license

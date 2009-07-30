@@ -1,0 +1,16 @@
+!!!
+%html{:xmlns => "http://www.w3.org/1999/xhtml", "xml:lang".to_sym  => "en", :lang => "en"}
+  %head
+    %title= "#{SimpleConfig::Site.title}"
+    = stylesheet_link_tag 'layout', 'content', :media => :screen
+  %body
+    #wrapper
+      #top-menu
+      #header
+        %h1= link_to(SimpleConfig::Site.title, root_path)
+        
+      #main
+        #content
+          = yield
+          
+      #footer
