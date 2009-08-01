@@ -55,6 +55,26 @@ namespace :simple_cms do
         end # ActiveRecord::Base.transaction
       end # Dir
     end # Viewpath loop
-      
   end # layouts task
+  
+  desc "Add add some sample pages to the first layout found"
+  task :sample_pages => :environment do
+    layout = Layout.first
+    if layout
+      p = Page.create({:title => "Sample pages", :layout_id => layout.id})
+      if p
+        p1 = Page.create({:title => "Gray Zinc Saint Bernard", :parent_id => p.id, :layout_id => layout.id})
+        Page.create({:title => "Black Brass Bulldog", :parent_id => p.id, :layout_id => layout.id})
+        p3 = Page.create({:title => "Gray Copper Tan", :parent_id => p.id, :layout_id => layout.id})
+        
+        Page.create({:title => "Red Mercury Cinnabar", :parent_id => p1.id, :layout_id => layout.id})
+        Page.create({:title => "Halibut Tin Sunflower", :parent_id => p1.id, :layout_id => layout.id})
+        
+        Page.create({:title => "Eel Brass Daffodil", :parent_id => p3.id, :layout_id => layout.id})
+        Page.create({:title => "Herring Titanium Poppy", :parent_id => p3.id, :layout_id => layout.id})
+        Page.create({:title => "Bass Watt Hyacinth", :parent_id => p3.id, :layout_id => layout.id})
+      end
+    end
+  end # sample_pages task
+  
 end
