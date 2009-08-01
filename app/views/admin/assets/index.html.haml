@@ -1,12 +1,5 @@
--if parent_object
-  -page_title("Viewing assets for #{parent_object.class.name.downcase}")
--else
-  -page_title("Viewing all assets")
+-page_title("Assets of page #{@page.title}")
 
--if !current_objects.empty?
-  %p We have something to show
-  
--else
-  %p
-    No assets to show. 
-    =link_to "Create one?", new_admin_asset_path
+-@page.all_assets.each do |asset|
+  "asset!"
+

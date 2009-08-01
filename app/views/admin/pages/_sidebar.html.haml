@@ -25,16 +25,17 @@
       -if current_object.children.size.zero?
         %li This page has no children
 
-    %h3 
-      Assets 
-      %span (click thumbnail to preview)
-    %ul.top
-      -if current_object.missing_assets_count > 0
-        %li
-          %strong #{pluralize(current_object.missing_assets_count, 'asset is', 'assets are')} missing
-      -else
-        %li #{current_object.associated_assets_count} thumbnails...
-      %li= link_to "Manage assets", admin_page_assets_path(current_object), :id => 'manage_assets'
+    -if current_object.maximum_assets_count > 0
+      %h3
+        Assets 
+        %span (click thumbnail to preview)
+      %ul.top
+        -if current_object.missing_assets_count > 0
+          %li
+            %strong Missing #{current_object.missing_assets_count} of #{pluralize(current_object.maximum_assets_count, 'asset')}
+        -else
+          %li #{current_object.associated_assets_count}/#{current_object.maximum_assets_count} thumbnails...
+        %li= link_to "Manage assets", admin_page_assets_path(current_object), :id => 'manage_assets'
 
   -else
 

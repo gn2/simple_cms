@@ -1,4 +1,7 @@
 %h2= @page.title
-%h3= @page.url
-%p This is the default layout
-%p= @page.page_parts.content('notes')
+%p This is the an example of a layout
+
+%p subtitle (string): #{@page.content(:subtitle)}
+%p description (text): #{@page.content(:description)}
+
+#{@page.content(:photo)}

@@ -1,7 +1,7 @@
 -page_title("Creating asset")
 
 .form_holder
-  -form_for( current_object, :url => admin_assets_path ) do |f|
+  -form_for( @asset, :url => admin_page_assets_path ) do |f|
     =render :partial => "form", :locals => { :f => f }
     %p.submit
-      =f.submit "Create asset"
+      =f.submit "Upload asset"

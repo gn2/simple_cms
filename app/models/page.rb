@@ -2,10 +2,9 @@ class Page < ActiveRecord::Base
   include AASM
   is_paranoid
   state_machine_history
-  # TODO:change to position
+  # TODO:change order to position
   acts_as_tree :order => "title"
   has_permalink :title, :update => true
-  acts_as_polymorphic_paperclip
   
   attr_protected :permalink
   attr_readonly :layout_id
@@ -15,11 +14,12 @@ class Page < ActiveRecord::Base
   validates_presence_of :layout
   validates_uniqueness_of :title, :scope => :parent_id, :message => "should be unique within a category", :case_sensitive => false 
   validates_each :parent_id do |record, attr, value|
-    record.errors.add(attr, 'must be a different page') if value == record.id
+    record.errors.add(attr, 'must be a different page') if value && value == record.id
   end 
   
   # Relationships
   belongs_to :layout
+  
   has_many :page_parts, :dependent => :destroy do
     def with_layout_part(identifier)
       case identifier
@@ -29,10 +29,26 @@ class Page < ActiveRecord::Base
     end
     
     def content(layout_part_name)
-      page_part = find(:first, :joins => [:layout_part], :conditions => {:layout_parts => {:name => layout_part_name}})
+      page_part = find(:first, :joins => [:layout_part], :conditions => {:layout_parts => {:name => layout_part_name.to_s}})
       page_part.nil? ? nil : page_part.content
     end
+    
+    def assets
+      inject([]) { |assets, page_part| assets << page_part.asset if page_part.layout_part.content_type=='asset' && page_part.asset }
+    end
+    
+    def associated_assets_count
+      inject(0) { |sum, page_part| page_part.layout_part.content_type=='asset' ? sum + 1 : sum }
+    end
+    
+    def with_assets
+      find(:all, :joins => [:layout_part], :conditions => {:layout_parts => {:content_type => 'asset'}})
+    end
   end
+  
+  # Delegate
+  delegate :assets, :to => :page_parts
+  delegate :associated_assets_count, :to => :page_parts
   
   # Nested attributes
   accepts_nested_attributes_for :page_parts, :allow_destroy => true
@@ -84,19 +100,29 @@ class Page < ActiveRecord::Base
     self.ancestors.inject(self.published?) { |result,page| result = page.published? if result }
   end
   
-  # Counting associated assets
-  def associated_assets_count
-    # self.page_parts.inject(0) { |sum,page_part| page_part.layout_part.content_type=='asset' ? sum + 1 : sum }
-    self.assets.size
-  end
-  
+  # Counting assets
   def maximum_assets_count
-    self.layout.layout_parts.inject(0) { |sum,layout_part| layout_part.content_type=='asset' ? sum + 1 : sum }
+    layout.assets_count
   end
-  
   def missing_assets_count
     maximum_assets_count - associated_assets_count
   end
+  
+  # Finding all assets associated or which should be associated
+  def all_assets
+    returning [] do |assets|
+      self.layout.layout_parts.with_assets.each do |layout_asset|
+        page_part = self.page_parts.with_layout_part(layout_asset.id)
+        assets << (page_part.nil? || page_part.asset.nil?) ? Asset.new : page_part.asset
+      end
+    end
+  end
+  
+  # Simpler access to page_parts content
+  def content(page_part)
+    self.page_parts.content(page_part)
+  end
+
   
   # Class methods
   

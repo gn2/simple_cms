@@ -6,11 +6,9 @@ layout:
   name: example
 
 layout_parts:
-  - name: title
-    content_type: string
   - name: subtitle
     content_type: string
   - name: photo
-    content_type: image
+    content_type: asset
   - name: description
     content_type: text
