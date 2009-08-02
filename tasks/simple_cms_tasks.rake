@@ -62,8 +62,10 @@ namespace :simple_cms do
     layout = Layout.first
     if layout
       p = Page.create({:title => "Sample pages", :layout_id => layout.id})
+      p.publish!
       if p
         p1 = Page.create({:title => "Gray Zinc Saint Bernard", :parent_id => p.id, :layout_id => layout.id})
+        p1.publish!
         Page.create({:title => "Black Brass Bulldog", :parent_id => p.id, :layout_id => layout.id})
         p3 = Page.create({:title => "Gray Copper Tan", :parent_id => p.id, :layout_id => layout.id})
         

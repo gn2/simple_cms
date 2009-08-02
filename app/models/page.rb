@@ -29,7 +29,12 @@ class Page < ActiveRecord::Base
 
     def content(layout_part_name)
       assets = find(:all, :joins => [:layout_part], :conditions => {:layout_parts => {:name => layout_part_name.to_s}})
-      assets && (assets.size == 1) ? assets.first : assets
+      case assets.size
+      when 0: nil
+      when 1: assets.first
+      else
+        assets
+      end
     end
 
     def associated_count
