@@ -8,7 +8,9 @@ layout:
 layout_parts:
   - name: subtitle
     content_type: string
-  - name: photo
-    content_type: asset
   - name: description
     content_type: text
+  - name: top_picture
+    content_type: asset
+  - name: slideshow
+    content_type: assets_collection

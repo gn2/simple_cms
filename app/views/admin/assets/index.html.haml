@@ -1,5 +1,12 @@
--page_title("Assets of page #{@page.title}")
+-page_title("Viewing assets of page #{parent_object.title}")
+=render :partial => 'sidebar'
 
--@page.all_assets.each do |asset|
-  "asset!"
+%h3 Individual assets
+=render :partial => 'assets_table', :locals => {:layout_parts => @page.layout.layout_parts.with_assets}
 
+-if @page.layout.layout_parts.with_assets_collection
+  -@page.layout.layout_parts.with_assets_collection.each do |collection|
+    %h3 
+      Assets for #{collection.name.humanize}
+      %span (drag & drop to re-order)
+    =render :partial => 'assets_table', :locals => {:assets => @page.assets.with_layout_part(collection.id), :collection => collection}

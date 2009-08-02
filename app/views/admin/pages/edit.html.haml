@@ -6,3 +6,4 @@
     =render :partial => "form", :locals => { :f => f }
     %p.submit
       =f.submit "Save your changes"
+      %span.alternative_button=link_to "Cancel", admin_pages_path

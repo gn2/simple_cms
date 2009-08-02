@@ -1,0 +1,15 @@
+-page_title("View asset")
+=render :partial => 'sidebar'
+
+.form_holder
+  -if @asset && @asset.web_safe?
+    =image_tag(@asset.url(:medium))
+    =image_tag(@asset.url(:small))
+    =image_tag(@asset.url(:tiny))
+  -else
+    %strong No preview available
+  -form_for(@asset, :url => admin_page_asset_path(@page, @asset, :layout_part => @asset.layout_part_id)) do |f|
+    =render :partial => "form", :locals => { :f => f }
+    %p.submit
+      =f.submit "Save your changes"
+      %span.alternative_button=link_to "Cancel", admin_page_assets_path(@page)

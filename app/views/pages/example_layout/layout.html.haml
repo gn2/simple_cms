@@ -1,7 +1,22 @@
 %h2= @page.title
 %p This is the an example of a layout
 
-%p subtitle (string): #{@page.content(:subtitle)}
-%p description (text): #{@page.content(:description)}
+%h3 Some attributes
+%h4 subtitle (string):
+%p{:style => "border: 1px solid black; background: gray;"}
+  #{@page.content(:subtitle)}
 
-#{@page.content(:photo)}
+%h4 description (text):
+%div{:style => "border: 1px solid black; background: gray;"}
+  #{@page.content(:description).to_html}
+
+%h3 A single image
+-if @page.content(:top_picture)
+  -# @page.content(:top_picture) returns an Asset ActiveRecord object.
+  =image_tag @page.content(:top_picture).url(:medium)
+
+%h3 A collection of images
+-if @page.content(:slideshow)
+  -@page.content(:slideshow).each do |picture|
+    -# picture is an Asset ActiveRecord object.
+    =image_tag(picture.url(:medium)) if picture

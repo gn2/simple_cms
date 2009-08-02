@@ -29,13 +29,19 @@
       %h3
         Assets 
         %span (click thumbnail to preview)
+
       %ul.top
         -if current_object.missing_assets_count > 0
           %li
-            %strong Missing #{current_object.missing_assets_count} of #{pluralize(current_object.maximum_assets_count, 'asset')}
-        -else
-          %li #{current_object.associated_assets_count}/#{current_object.maximum_assets_count} thumbnails...
+            %strong You have #{pluralize(current_object.missing_assets_count, 'asset')} missing for this page.
         %li= link_to "Manage assets", admin_page_assets_path(current_object), :id => 'manage_assets'
+
+      %ul.top
+        %li
+          -current_object.assets.each do |asset|
+            -if asset && asset.web_safe?
+              =link_to image_tag(asset.url(:tiny)), asset.url(:large, false), :rel => 'facebox', :title => "Preview image"
+
 
   -else
 

@@ -38,8 +38,7 @@ class SenseiController < BaseController
     end # respond_to
   end
 
-  def show_page
-
+  def sitemap
   end
 
   private

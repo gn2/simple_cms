@@ -1,0 +1,57 @@
+%table{:cellspacing => "0", :summary => "Assets", :class => "list"}
+  %colgroup
+    %col#num_col
+    %col#thumbnail_col
+    %col#name_col
+    -unless defined?(collection)
+      %col#label_col  
+    %col#type_col
+    %col#action_col
+  %thead
+    %tr
+      %th{:scope => "col"} #
+      %th{:scope => "col"} Thumbnail
+      %th{:scope => "col"} Name
+      -unless defined?(collection)
+        %th{:scope => "col"} Label
+      %th{:scope => "col"} Type
+      %th{:scope => "col"} Action
+  %tbody
+    -if defined?(layout_parts) && layout_parts && layout_parts.length > 0
+      -layout_parts.each_with_index do |layout_part, index|
+        -assets = @page.assets.with_layout_part(layout_part.id)
+        -asset = assets ? assets.first : nil
+        %tr{:class => (index%2==0 ? "even" : "odd")}
+          %td= index + 1
+          %td= asset && asset.web_safe? ? image_tag(asset.url(:tiny)) : "<strong>No preview available</strong>"
+          %td= asset ? h(asset.name) : "<strong>Asset missing</strong>"
+          %td= h(layout_part.name.humanize)
+          %td= asset ? h(asset.data_content_type) : ""
+          %td.actions
+            -if asset
+              =link_to 'edit', edit_admin_page_asset_path(parent_object, asset), :class => "button"            
+              =link_to 'delete', admin_page_asset_path(parent_object, asset), {:confirm => 'Are you sure?', :method => :delete, :class => "button delete"}
+            -else
+              =link_to 'create', new_admin_page_asset_path(parent_object, :layout_part => layout_part.id), :class => "button"
+    
+    
+    -elsif defined?(collection) && collection && defined?(assets) && assets && assets.length > 0
+      -assets.each_with_index do |asset, index|
+        %tr{:class => (index%2==0 ? "even" : "odd")}
+          %td= index + 1
+          %td= asset && asset.web_safe? ? image_tag(asset.url(:tiny)) : "<strong>No preview available</strong>"
+          %td= asset ? h(asset.name) : "<strong>Asset missing</strong>"
+          %td= asset ? h(asset.data_content_type) : ""
+          %td.actions
+            =link_to 'edit', edit_admin_page_asset_path(parent_object, asset), :class => "button"            
+            =link_to 'delete', admin_page_asset_path(parent_object, asset), {:confirm => 'Are you sure?', :method => :delete, :class => "button delete"}
+    
+    -else
+      %tr
+        %td.empty{:colspan => "5"} 
+          No assets to list.
+          
+    -if defined?(collection) && collection
+      %tr
+        %td.empty{:colspan => "5"}
+          =link_to 'Add an asset to this collection', new_admin_page_asset_path(parent_object, :layout_part => collection.id), :class => "button"

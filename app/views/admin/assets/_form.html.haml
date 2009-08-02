@@ -1,1 +1,9 @@
-=f.file_field :data
+%div= f.error_messages
+
+=textfield_input('name', current_object.name, :prefix => 'asset')
+=textarea_input('caption', current_object.caption, :prefix => 'asset', :options => {:class => "text_area resizable markItUp"})
+=hidden_field_tag('asset[layout_part_id]', @layout_part.id)
+
+%p
+  %span.label File
+  %span.input=f.file_field :data

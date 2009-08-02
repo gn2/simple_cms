@@ -1,0 +1,7 @@
+-content_for :sidebar do
+  %h3 Action
+  -if @page
+    %ul.top
+      %li=link_to "Back to page", admin_page_path(@page)
+      -if @asset
+        %li=link_to "Back to assets list", admin_page_assets_path(@page)

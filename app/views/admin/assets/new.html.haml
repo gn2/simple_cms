@@ -1,7 +1,9 @@
 -page_title("Creating asset")
+=render :partial => 'sidebar'
 
 .form_holder
-  -form_for( @asset, :url => admin_page_assets_path ) do |f|
+  -form_for( @asset, :url => admin_page_assets_path, :html => { :multipart => true } ) do |f|
     =render :partial => "form", :locals => { :f => f }
     %p.submit
-      =f.submit "Upload asset"
+      =f.submit "Create asset"
+      %span.alternative_button=link_to "Cancel", admin_page_assets_path(@page)
