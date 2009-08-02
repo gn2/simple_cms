@@ -6,6 +6,8 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
   
+  map.sitemap 'sitemap.xml', :controller => 'sensei', :action => 'sitemap'
+  
   # To be added in /config/routes.rb
   # map.root :controller => "sensei", :action => 'home'
   # map.connect '*path.:format', :controller => 'sensei', :action => 'dispatch'

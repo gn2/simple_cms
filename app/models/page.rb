@@ -64,6 +64,7 @@ class Page < ActiveRecord::Base
   named_scope :published, :conditions => { :status => "published" }
   named_scope :draft, :conditions => { :status => "draft" }
   named_scope :top_level, :conditions => { :parent_id => nil }
+  named_scope :for_sitemap, :select => 'id, state, permalink, parent_id, updated_at', :order => 'updated_at DESC', :limit => 50000
 
   # AASM configuration
   aasm_column :state

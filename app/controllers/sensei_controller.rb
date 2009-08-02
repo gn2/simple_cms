@@ -39,6 +39,9 @@ class SenseiController < BaseController
   end
 
   def sitemap
+    @pages = Page.for_sitemap
+    headers["Last-Modified"] = @pages[0].updated_at.httpdate if @pages[0]
+    render :layout => false, :template => "pages/sitemap"
   end
 
   private
