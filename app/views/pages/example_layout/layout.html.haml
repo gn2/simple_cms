@@ -12,7 +12,6 @@
 
 %h3 A single image
 -if @page.content(:top_picture)
-  -raise @page.content(:top_picture).to_yaml
   -# @page.content(:top_picture) returns an Asset ActiveRecord object.
   =image_tag @page.content(:top_picture).url(:medium)
 
