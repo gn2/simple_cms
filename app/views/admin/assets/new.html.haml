@@ -1,5 +1,6 @@
--page_title("Creating asset")
 =render :partial => 'sidebar'
+-page_title("Creating asset for #{@layout_part.name.humanize}")
+/ %h2 Creating asset for #{@layout_part.name.humanize}
 
 .form_holder
   -form_for( @asset, :url => admin_page_assets_path, :html => { :multipart => true } ) do |f|

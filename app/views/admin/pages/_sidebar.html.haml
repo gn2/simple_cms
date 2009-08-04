@@ -19,9 +19,9 @@
     %h3 
       Children 
       %span (drag & drop to re-order)
-    %ul.top
+    %ul.top#sortable_children
       -current_object.children.each do |child|
-        %li= link_to child.title.titlecase, admin_page_path(child)
+        %li.child{:id => "page_#{child.id}"}= link_to child.title.titlecase, admin_page_path(child)
       -if current_object.children.size.zero?
         %li This page has no children
 
@@ -34,7 +34,8 @@
         -if current_object.missing_assets_count > 0
           %li
             %strong You have #{pluralize(current_object.missing_assets_count, 'asset')} missing for this page.
-        %li= link_to "Manage assets", admin_page_assets_path(current_object), :id => 'manage_assets'
+        %li= facebox_link_to "Manage assets", :url => admin_page_assets_path(current_object) ,:method => :get
+        %li= link_to "Manage assets", admin_page_assets_path(current_object)
 
       %ul.top
         %li

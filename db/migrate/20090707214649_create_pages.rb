@@ -4,6 +4,7 @@ class CreatePages < ActiveRecord::Migration
       t.string   :title
       t.string   :state,          :default => "draft",     :null => false
       t.string   :permalink
+      t.integer  :position,       :default => 0,     :null => false
       t.integer  :parent_id
       t.integer  :layout_id
       t.datetime :created_at

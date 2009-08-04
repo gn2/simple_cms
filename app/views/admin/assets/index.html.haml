@@ -1,5 +1,6 @@
--page_title("Viewing assets of page #{parent_object.title}")
 =render :partial => 'sidebar'
+-page_title("Viewing assets of page #{parent_object.title}")
+/%h2 Assets
 
 %h3 Individual assets
 =render :partial => 'assets_table', :locals => {:layout_parts => @page.layout.layout_parts.with_assets}

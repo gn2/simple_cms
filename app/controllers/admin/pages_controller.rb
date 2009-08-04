@@ -14,10 +14,6 @@ class Admin::PagesController < Admin::BaseController
       @layout = (Layout.exists?(params[:layout])) ? Layout.find(params[:layout]) : current_object.layout || Layout.first
     end
 
-    # response_for :index do |format|
-    #   format.html { render :action => '../generic/index'}
-    # end
-
     response_for :show do |format|
       format.html { render :action => 'edit' }
     end
@@ -40,6 +36,12 @@ class Admin::PagesController < Admin::BaseController
   
   def markitup_preview
     render :text => RDiscount.new(params[:data]).to_html
+  end
+  
+  def sort
+    order = params[:page]
+    Page.order(order)
+    render :text => order.inspect
   end
   
   private

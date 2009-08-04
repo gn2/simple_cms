@@ -1,10 +1,12 @@
 ActionController::Routing::Routes.draw do |map|
   map.namespace(:admin) do |admin|
     # admin.resources :assets    
-    admin.resources :pages, :member => {:publish => :put, :hide => :put}, :collection => {:markitup_preview => :post} do |pages|
+    admin.resources :pages, :member => {:publish => :put, :hide => :put}, :collection => {:sort => :put, :markitup_preview => :post} do |pages|
       pages.resources :assets
     end
   end
+
+  
   
   map.sitemap 'sitemap.xml', :controller => 'sensei', :action => 'sitemap'
   
