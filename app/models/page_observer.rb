@@ -6,9 +6,11 @@ class PageObserver < ActiveRecord::Observer
   observe Page
 
   def after_create(page)
-    RAILS_DEFAULT_LOGGER.info "[PING GOOGLE] A page has just been created... pinging google to check new sitemap."
-    default_url_options[:host] = SimpleConfig::Site.domain
-    Net::HTTP.get('www.google.com', '/ping?sitemap=' + URI.escape(sitemap_url))
+    if SimpleConfig::Google.ping_sitemap
+      RAILS_DEFAULT_LOGGER.info "[PING GOOGLE] A page has just been created... pinging google to check new sitemap."
+      default_url_options[:host] = SimpleConfig::Site.domain
+      Net::HTTP.get('www.google.com', '/ping?sitemap=' + URI.escape(sitemap_url))
+    end
   end
 
 end
