@@ -152,7 +152,7 @@ class Page < ActiveRecord::Base
     # At this we have found the page. Now we check if the page should be displayed
     return (page && (include_drafts || page.visible?)) ? page : nil
   end
-  
+
   # Set passed-in order for passed-in ids.
   def self.order(ids)
     if ids

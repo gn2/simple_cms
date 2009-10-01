@@ -34,7 +34,7 @@
         -if current_object.missing_assets_count > 0
           %li
             %strong You have #{pluralize(current_object.missing_assets_count, 'asset')} missing for this page.
-        %li= facebox_link_to "Manage assets", :url => admin_page_assets_path(current_object) ,:method => :get
+        /%li= facebox_link_to "Manage assets", :url => admin_page_assets_path(current_object) ,:method => :get
         %li= link_to "Manage assets", admin_page_assets_path(current_object)
 
       %ul.top
