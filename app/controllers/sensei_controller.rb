@@ -7,9 +7,11 @@ class SenseiController < BaseController
 
 
   def dispatch
-    # The respond_to block respond alright if the Accept header is
-    # set properly. But it doesn't work with the extension. Fixing that.
-    # set_content_type_header
+    # The respond_to block responds according to the Accept header.
+    # But it doesn't work if you only change the extension in the
+    # URL with the extension. (i.e. /about.xml will render an HTML
+    # page, if Accept header is not set to application/xml)
+
     # Removing extension if there is any
     params[:path].push(File.basename(params[:path].pop, ".*"))
     page = params[:path].join('-').downcase

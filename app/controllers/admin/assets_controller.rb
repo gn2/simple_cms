@@ -2,7 +2,7 @@ class Admin::AssetsController < Admin::BaseController
 
   make_resourceful do
     belongs_to :page
-    
+
     actions :all
 
     before :new, :create, :edit, :update, :show do

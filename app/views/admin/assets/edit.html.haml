@@ -8,7 +8,7 @@
     =image_tag(@asset.url(:tiny))
   -else
     %strong No preview available
-  -form_for(@asset, :url => admin_page_asset_path(@page, @asset, :layout_part => @asset.layout_part_id)) do |f|
+  -form_for(@asset, :url => admin_page_asset_path(@page, @asset, :layout_part => @asset.layout_part_id), :html => { :multipart => true } ) do |f|
     =render :partial => "form", :locals => { :f => f }
     %p.submit
       =f.submit "Save your changes"
