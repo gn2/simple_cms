@@ -1,9 +1,27 @@
 class SenseiController < BaseController
 
+  before_filter :load_data
+
   def home
-    @page = Page.top_level.first
-    render :template => "pages/#{@page.layout.name}_layout/layout"
-  end
+    @page = Page.top_level.published.first
+    respond_to do |format|
+      format.html do
+        if @page
+          render :template => "pages/#{@page.layout.name}_layout/layout"
+        else
+          render :template => 'static/404', :status => 404
+        end
+      end # format.html
+
+      format.xml do
+        if @page
+          render :layout => false, :xml => @page.to_xml(:except => [:created_at, :updated_at, :deleted_at, :page_id] ,:include => :page_parts)
+        else
+          render :layout => false, :template => 'static/404', :status => 404
+        end
+      end # format.xml
+    end # respond_to
+  end # home
 
 
   def dispatch
@@ -70,5 +88,9 @@ class SenseiController < BaseController
     else
       logger.info "Nope, nothing matched"
     end
+  end
+
+  def load_data
+    @page_tree = Page.top_level.published
   end
 end

@@ -1,6 +1,7 @@
 %div= f.error_messages
 
 =textfield_input('title', current_object.title, :prefix => 'page')
+
 %p
   %span.label Parent
   %span.input=select_for_tree('page', 'parent_id', @top_level_pages, current_object, :name => "page[parent_id]", :include_blank => true)

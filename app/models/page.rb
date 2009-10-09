@@ -60,8 +60,8 @@ class Page < ActiveRecord::Base
   accepts_nested_attributes_for :page_parts, :allow_destroy => true
 
   # Named scope
-  named_scope :published, :conditions => { :status => "published" }
-  named_scope :draft, :conditions => { :status => "draft" }
+  named_scope :published, :conditions => { :state => "published" }
+  named_scope :draft, :conditions => { :state => "draft" }
   named_scope :top_level, :conditions => { :parent_id => nil }
   named_scope :for_sitemap, :select => 'id, state, permalink, parent_id, updated_at', :order => 'updated_at DESC', :limit => 50000
 
@@ -94,6 +94,7 @@ class Page < ActiveRecord::Base
   end
 
   # Nicer names for states
+  #TODO: Move that to a helper. It's really a view thing.
   def nice_state
     case state
     when 'draft': "a <strong>draft</strong>"
@@ -113,6 +114,9 @@ class Page < ActiveRecord::Base
   end
   def missing_assets_count
     maximum_assets_count - self.assets.associated_count
+  end
+  def assets_count
+    self.assets.associated_count
   end
 
   # Simple access to page content

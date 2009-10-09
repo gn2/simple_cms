@@ -23,7 +23,9 @@
       -current_object.children.each do |child|
         %li.child{:id => "page_#{child.id}"}= link_to child.title.titlecase, admin_page_path(child)
       -if current_object.children.size.zero?
-        %li This page has no children
+        %li
+          This page has no children.
+          =link_to "Create one?", new_admin_page_path(:layout => current_object.layout_id, :parent_id => current_object.id)
 
     -if current_object.maximum_assets_count > 0
       %h3
