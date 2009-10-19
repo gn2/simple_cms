@@ -1,4 +1,6 @@
 -page_title("Viewing all pages")
 =render :partial => 'sidebar'
-
-=show_page_tree(@top_level_pages)
+.box
+  Drag and drop pages to re-order them!
+#jstree
+  =show_page_tree(@top_level_pages)

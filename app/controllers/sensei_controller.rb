@@ -4,6 +4,7 @@ class SenseiController < BaseController
 
   def home
     @page = Page.top_level.published.first
+    set_page_title(@page)
     respond_to do |format|
       format.html do
         if @page
@@ -37,10 +38,13 @@ class SenseiController < BaseController
     respond_to do |format|
       format.html do
         if static_page_exists?(page, :html)
+          set_page_title(page)
           render :template => "static/#{page}"
         elsif dynamic_page_exists?(params[:path])
+          set_page_title(@page)
           render :template => "pages/#{@page.layout.name}_layout/layout"
         else
+          set_page_title(@page)
           render :template => 'static/404', :status => 404
         end
       end
@@ -92,5 +96,9 @@ class SenseiController < BaseController
 
   def load_data
     @page_tree = Page.top_level.published
+  end
+
+  def set_page_title(page)
+    @page_title = page.title if page
   end
 end

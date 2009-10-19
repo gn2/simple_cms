@@ -20,4 +20,9 @@ class Admin::AssetsController < Admin::BaseController
     end
   end
 
+  def sort
+    order = params[:asset]
+    Asset.order(order)
+    render :text => order.inspect
+  end
 end

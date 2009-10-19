@@ -21,13 +21,13 @@ class Page < ActiveRecord::Base
   has_many :assets, :as => :attachable, :dependent => :destroy do
     def with_layout_part(identifier)
       case identifier
-      when String: find(:all, :joins => [:layout_part], :conditions => {:layout_parts => {:name => identifier}})
-      when Integer: find(:all, :joins => [:layout_part], :conditions => {:layout_parts => {:id => identifier}})
+      when String: find(:all, :joins => [:layout_part], :conditions => {:layout_parts => {:name => identifier}}, :order => :position)
+      when Integer: find(:all, :joins => [:layout_part], :conditions => {:layout_parts => {:id => identifier}}, :order => :position)
       end
     end
 
     def content(layout_part_name)
-      assets = find(:all, :joins => [:layout_part], :conditions => {:layout_parts => {:name => layout_part_name.to_s}})
+      assets = find(:all, :joins => [:layout_part], :conditions => {:layout_parts => {:name => layout_part_name.to_s}}, :order => :position)
       case assets.size
       when 0: nil
       when 1: assets.first
@@ -62,7 +62,7 @@ class Page < ActiveRecord::Base
   # Named scope
   named_scope :published, :conditions => { :state => "published" }
   named_scope :draft, :conditions => { :state => "draft" }
-  named_scope :top_level, :conditions => { :parent_id => nil }
+  named_scope :top_level, :conditions => { :parent_id => nil }, :order => :position
   named_scope :for_sitemap, :select => 'id, state, permalink, parent_id, updated_at', :order => 'updated_at DESC', :limit => 50000
 
   # AASM configuration
@@ -130,6 +130,14 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def update_parent(new_parent_id)
+    if new_parent_id
+      logger.info "===================> #{parent_id}"
+      new_parent_id = new_parent_id.to_i
+      new_parent_id = nil if new_parent_id == 0
+      update_attribute(:parent_id, new_parent_id)
+    end
+  end
   # Class methods
 
   # Find a page using a concatenation of a page's permalink

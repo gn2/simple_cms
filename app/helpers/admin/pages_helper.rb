@@ -40,16 +40,20 @@ module Admin::PagesHelper
 
 
   def show_page_tree(top_level_pages)
-    content_tag(:ul, show_pages(top_level_pages), :class => 'page_tree top')
+    content_tag(:ul, show_pages(top_level_pages), :class => 'page_tree top', :id => "jstree")
   end
 
   private
-  def show_pages(page, content='')
-    page.each do |child|
-      li_content = content_tag(:a, child.title.titlecase, :href => admin_page_path(child.id))
-      li_content << content_tag(:span, "layout:#{child.layout.name} | state:#{child.state} | #{pluralize(child.assets_count, 'asset')}", :class => "page_tree_info")
-      content += content_tag(:li, li_content)
-      content += content_tag(:ul, show_pages(child.children))
+  def show_pages(pages, content='')
+    pages.each do |page|
+      li_content = content_tag(:a, content_tag(:ins, " ") + page.title.titlecase, :href => admin_page_path(page.id), :class => "page_title")
+      span_content = content_tag(:a, "edit", :href => admin_page_path(page.id))
+      span_content << " | layout:#{page.layout.name}"
+      span_content << " | state:#{page.state}"
+      span_content << " | #{page.assets_count}/#{pluralize(page.maximum_assets_count, 'asset')}"
+      li_content << content_tag(:span, span_content, :class => "page_tree_info")
+      li_content += content_tag(:ul, show_pages(page.children)) if page.children.size > 0
+      content += content_tag(:li, li_content, :id => "page_#{page.id}")
     end
     return content
   end

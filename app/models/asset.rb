@@ -13,6 +13,8 @@ class Asset < ActiveRecord::Base
 
   validates_attachment_presence :data, :on => :create
 
+  # Instance method
+
   def url(*args)
     data.url(*args)
   end
@@ -35,4 +37,17 @@ class Asset < ActiveRecord::Base
   def icon
     "#{data_content_type.gsub(/[\/\.]/,'-')}.png"
   end
+
+  # Class method
+
+  # Set passed-in order for passed-in ids.
+  def self.order(ids)
+    if ids
+      update_all(
+        ['position = FIND_IN_SET(id, ?)', ids.join(',')],
+        { :id => ids }
+      )
+    end
+  end
+
 end

@@ -51,6 +51,11 @@ class Admin::PagesController < Admin::BaseController
     render :text => order.inspect
   end
 
+  def update_parent
+    current_object.update_parent(params[:parent_id])
+    render :text => current_object.parent_id
+  end
+
   private
   def sidebar_data
     @top_level_pages = Page.top_level
