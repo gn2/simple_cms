@@ -56,4 +56,4 @@
         Create a new page with the following layout:
         %ul
           -@layouts.each do |l|
-            %li=link_to l.name, new_admin_page_path(:layout => l.id)
+            %li=link_to l.name.humanize, new_admin_page_path(:layout => l.id)

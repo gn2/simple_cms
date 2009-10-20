@@ -48,7 +48,7 @@ module Admin::PagesHelper
     pages.each do |page|
       li_content = content_tag(:a, content_tag(:ins, " ") + page.title.titlecase, :href => admin_page_path(page.id), :class => "page_title")
       span_content = content_tag(:a, "edit", :href => admin_page_path(page.id))
-      span_content << " | layout:#{page.layout.name}"
+      span_content << " | layout:#{page.layout.name.humanize}"
       span_content << " | state:#{page.state}"
       span_content << " | #{page.assets_count}/#{pluralize(page.maximum_assets_count, 'asset')}"
       li_content << content_tag(:span, span_content, :class => "page_tree_info")

@@ -25,9 +25,10 @@ class Admin::PagesController < Admin::BaseController
     after :create_fails, :update_fails do
       flash[:error] = ""
     end
-    response_for :show_fails do
-      raise $!
-    end
+
+    # response_for :show_fails do
+    #   raise $!
+    # end
 
   end
 
