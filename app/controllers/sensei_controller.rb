@@ -4,6 +4,7 @@ class SenseiController < BaseController
 
   def home
     @page = Page.top_level.published.first
+    @page = pre_process_page_object(@page, :home)
     set_page_title(@page)
     respond_to do |format|
       format.html do
@@ -24,7 +25,6 @@ class SenseiController < BaseController
     end # respond_to
   end # home
 
-
   def dispatch
     # The respond_to block responds according to the Accept header.
     # But it doesn't work if you only change the extension in the
@@ -41,6 +41,7 @@ class SenseiController < BaseController
           set_page_title(page)
           render :template => "static/#{page}"
         elsif dynamic_page_exists?(params[:path])
+          @page = pre_process_page_object(@page, :dispatch)
           set_page_title(@page)
           render :template => "pages/#{@page.layout.name}_layout/layout"
         else
@@ -101,4 +102,9 @@ class SenseiController < BaseController
   def set_page_title(page)
     @page_title = page.title if page
   end
+
+  def pre_process_page_object(page, from)
+    page
+  end
+
 end

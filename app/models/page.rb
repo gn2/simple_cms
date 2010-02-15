@@ -11,7 +11,7 @@ class Page < ActiveRecord::Base
   # Validations
   validates_presence_of :title
   validates_presence_of :layout
-  validates_uniqueness_of :title, :scope => :parent_id, :message => "should be unique within a category", :case_sensitive => false
+  validates_uniqueness_of :title, :scope => [:parent_id, :deleted_at], :message => "should be unique within a category", :case_sensitive => false
   validates_each :parent_id do |record, attr, value|
     record.errors.add(attr, 'must be a different page') if value && value == record.id
   end
@@ -80,6 +80,29 @@ class Page < ActiveRecord::Base
 
   # Instance methods
 
+  # Find top parent
+  def top_parent
+    page = self
+    while !page.parent.nil?
+      page = page.parent
+    end
+    return page
+  end
+
+  def parent_of?(child, page=self)
+    if page == child || page.children.empty?
+      return false
+    elsif page.children.include?(child)
+      return true
+    else
+      result = false
+      page.children.each do |child_page|
+        result = child_page.parent_of?(child, child_page) unless result
+      end
+      return result
+    end
+  end
+
   # Build the url of a page.
   # URL: /:parent_parent_permalink/:parent_permalink/:permalink
   def url
@@ -108,6 +131,10 @@ class Page < ActiveRecord::Base
     self.ancestors.inject(self.published?) { |result,page| result = page.published? if result }
   end
 
+  def has_children?
+    !self.children.empty?
+  end
+
   # Counting assets
   def maximum_assets_count
     self.layout.assets_count + self.layout.assets_collection_count
@@ -132,7 +159,6 @@ class Page < ActiveRecord::Base
 
   def update_parent(new_parent_id)
     if new_parent_id
-      logger.info "===================> #{parent_id}"
       new_parent_id = new_parent_id.to_i
       new_parent_id = nil if new_parent_id == 0
       update_attribute(:parent_id, new_parent_id)
