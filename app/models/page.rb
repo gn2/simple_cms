@@ -170,9 +170,9 @@ class Page < ActiveRecord::Base
   # and its parent page's permalink.
   # URL: /:blah_blah/:parent_permalink/:permalink
   def self.find_by_permalink_and_parent_permalink(path, include_drafts=false)
-    page = nil
-    page_permalink = path.pop
-    parent_page_permalink = path.pop
+    page = page_permalink = parent_page_permalink = nil
+    page_permalink = path.pop if path
+    parent_page_permalink = path.pop if path
 
     # If we have a page without parent
     if parent_page_permalink.nil?

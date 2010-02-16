@@ -18,7 +18,7 @@ namespace :simple_cms do
         # Could be interesting to check if some pages are actually using that layout
         existing_layout = Layout.find_by_name(name)
         if existing_layout
-          print "  This layout already exists. Do you want to overwrite it? (you could break existing pages using that layout!) (y/n)? "
+          print "  This layout already exists. Do you want to overwrite it? (you could break existing pages using that layout!) (y/N)? "
           overwrite = STDIN.gets
           next unless overwrite.downcase.strip =~ /^(yes|y)$/
         end
