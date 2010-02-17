@@ -3,8 +3,8 @@ class Asset < ActiveRecord::Base
   ASSET_SIZES = {
     :tiny => "32x32#",
     :small => "64x64>",
-    :medium => "128x128>",
-    :large => "750x440>"
+    :medium => "400x300>",
+    :large => "700x500>"
     }
 
   belongs_to :layout_part
