@@ -4,7 +4,7 @@ class Asset < ActiveRecord::Base
     :tiny => "32x32#",
     :small => "64x64>",
     :medium => "400x300>",
-    :large => "700x500>"
+    :large => "720x515>"
     }
 
   belongs_to :layout_part
