@@ -2,8 +2,20 @@ class SenseiController < BaseController
 
   def home
     # Setting default home page
-    mpage.page = Page.top_level.published.first
+    mpage.page = page_tree.first
     mpage.render_from = :home
+
+    # This allows you to fully customize the homepage
+    before_render(mpage)
+    mpage.freeze!
+
+    render_page
+  end # home
+
+  def enter
+    # Setting default enter page
+    mpage.page = page_tree.first
+    mpage.render_from = :enter
 
     # This allows you to fully customize the homepage
     before_render(mpage)
@@ -106,7 +118,7 @@ class SenseiController < BaseController
   end
 
   def set_variables_for_render
-    @page_tree = Page.top_level.published
+    @page_tree = page_tree
     @page_title = mpage.page_title
     @page = mpage.page
   end
@@ -117,10 +129,13 @@ class SenseiController < BaseController
     @mpage ||= SimpleCms::MetaPage.new
   end
 
+  def page_tree
+    Page.top_level.published
+  end
+
   # This method is meant to be overwritten in the main application to customize the dispatching
   def before_render(mpage)
     mpage
   end
-
 
 end

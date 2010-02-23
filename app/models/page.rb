@@ -62,6 +62,7 @@ class Page < ActiveRecord::Base
   # Named scope
   named_scope :published, :conditions => { :state => "published" }
   named_scope :draft, :conditions => { :state => "draft" }
+  named_scope :with_layout, lambda {|*args| {:include => :layout, :conditions => {:layouts => {:name => args.first.to_s}}} }
   named_scope :top_level, :conditions => { :parent_id => nil }, :order => :position
   named_scope :for_sitemap, :select => 'id, state, permalink, parent_id, updated_at', :order => 'updated_at DESC', :limit => 50000
 
@@ -164,6 +165,7 @@ class Page < ActiveRecord::Base
       update_attribute(:parent_id, new_parent_id)
     end
   end
+
   # Class methods
 
   # Find a page using a concatenation of a page's permalink
@@ -201,4 +203,35 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def self.find_first_page_without_layout(pages, layout_array, method = :breadth_first)
+    case method
+    when :breadth_first
+      pages.each do |page|
+        if page.visible? && !layout_array.include?(page.layout.name.to_sym)
+          return page
+        end
+      end
+      # If nothing found, we try each child of each page
+      page_found = nil
+      pages.each do |page|
+        break if page_found
+        next unless page.has_children?
+        page_found = Page.find_first_page_without_layout(page.children, layout_array, :breadth_first)
+      end
+      return page_found
+
+    when :depth_first
+      page_found = nil
+      pages.each do |page|
+        break if page_found
+        if page.visible? && !layout_array.include?(page.layout.name.to_sym)
+          return page
+        end
+        next unless page.has_children?
+        page_found = Page.find_first_page_without_layout(page.children, layout_array, :depth_first)
+      end
+      return page_found
+
+    end # case
+  end # find_first_page_without_layout
 end
