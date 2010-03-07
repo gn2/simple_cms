@@ -234,4 +234,22 @@ class Page < ActiveRecord::Base
 
     end # case
   end # find_first_page_without_layout
+
+  def self.random
+    self.find(:first, :offset => rand(self.count()))
+  end
+
+  def self.random_with_layout(layout="", count=1)
+    self.find(
+      :all,
+      :include => :layout,
+      :conditions => {
+        :state => 'published',
+        :layouts => {:name => layout.to_s}
+      },
+      :order => "RAND()",
+      :limit => count.to_s
+    )
+  end
+
 end

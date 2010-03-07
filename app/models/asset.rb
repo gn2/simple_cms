@@ -4,6 +4,7 @@ class Asset < ActiveRecord::Base
     :tiny => "32x32#",
     :small => "64x64>",
     :medium => "400x300>",
+    :portrait => "150x250#",
     :large => "720x515>"
     }
 
