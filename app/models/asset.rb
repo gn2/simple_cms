@@ -27,6 +27,14 @@ class Asset < ActiveRecord::Base
   def content_type
     data_content_type
   end
+  
+  def safe_name
+    if name && !name.empty?
+      name
+    else
+      File.basename(data_file_name, '.*').split('.').first.to_s.capitalize
+    end
+  end
 
   def browser_safe?
     %w(jpg gif png).include?(url.split('.').last.sub(/\?.+/, "").downcase)
