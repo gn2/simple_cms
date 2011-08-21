@@ -22,6 +22,8 @@ module Admin::PagesHelper
         textfield_input(layout_part.name, page_object.page_parts.content(layout_part.name), :prefix => prefix, :attribute => 'content')
       when :text
         textarea_input(layout_part.name, page_object.page_parts.content(layout_part.name), :prefix => prefix, :attribute => 'content', :options => {:class => "text_area resizable markItUp"})
+      when :embedded_video
+        textarea_input(layout_part.name, page_object.page_parts.content(layout_part.name), :prefix => prefix, :attribute => 'content', :options => {:class => "text_area_small"})
       else
         ""
       end
