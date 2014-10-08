@@ -252,4 +252,38 @@ class Page < ActiveRecord::Base
     )
   end
 
+  def self.random_with_layout_and_page_part(layout="", page_part="", count=1)
+    self.find(
+      :all,
+      :joins => [{:page_parts => :layout_part}, :layout],
+      :conditions => {
+        :state => 'published',
+        :page_parts => {
+          :layout_parts => {:name => page_part.to_s}
+        },
+        :layouts => {:name => layout.to_s}
+      },
+      :order => "RAND()",
+      :limit => count.to_s
+    )
+  end
+
+
+  def self.random_with_layout_and_asset(layout="", page_part="", count=1)
+    self.find(
+      :all,
+      :joins => [{:assets => :layout_part}, :layout],
+      :conditions => {
+        :state => 'published',
+        :assets => {
+          :layout_parts => {:name => page_part.to_s}
+        },
+        :layouts => {:name => layout.to_s}
+      },
+      :order => "RAND()",
+      :limit => count.to_s
+    )
+  end
+
+
 end

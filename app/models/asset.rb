@@ -27,7 +27,7 @@ class Asset < ActiveRecord::Base
   def content_type
     data_content_type
   end
-  
+
   def safe_name
     if name && !name.empty?
       name
@@ -40,12 +40,6 @@ class Asset < ActiveRecord::Base
     %w(jpg gif png).include?(url.split('.').last.sub(/\?.+/, "").downcase)
   end
   alias_method :web_safe?, :browser_safe?
-
-  # This method assumes you have images that correspond to the filetypes.
-  # For example "image/png" becomes "image-png.png"
-  def icon
-    "#{data_content_type.gsub(/[\/\.]/,'-')}.png"
-  end
 
   # Class method
 

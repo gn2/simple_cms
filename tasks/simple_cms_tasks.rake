@@ -24,8 +24,6 @@ namespace :simple_cms do
         end
 
         ActiveRecord::Base.transaction do
-          existing_layout.destroy if existing_layout
-
           # Loading manifest
           raise "Manifest file not found" unless FileTest.exists?("#{layout}/manifest.yml")
           manifest = YAML::load_file("#{layout}/manifest.yml")
@@ -36,22 +34,35 @@ namespace :simple_cms do
 
           # Adding layout in db
           puts "  Creating layout object for '#{name}'"
-          layout_object = Layout.create({:name => name})
-          raise "Layout could not be saved in the database" unless layout_object.valid?
+          if existing_layout
+            existing_layout.update_attributes!({:name => name})
+            layout_object = existing_layout
+          else
+            layout_object = Layout.create({:name => name})
+          end
 
           # Adding layout_parts in db
+          # NOTE: when updating a layout, this process does not delete all layout parts to avoid breaking existing pages.
           if manifest['layout_parts'] && manifest['layout_parts'].size > 0
             puts "  Creating #{manifest['layout_parts'].size} layout_part object(s) for '#{name}'"
             manifest['layout_parts'].each_with_index do |layout_part, index|
               raise "Layout part ##{index+1} does not have a valid name" unless layout_part['name'] && !layout_part['name'].blank?
               raise "Layout part ##{index+1} does not have a valid content_type" unless layout_part['content_type'] && !layout_part['content_type'].blank?
-              layout_part_object = LayoutPart.create({
-                :name => layout_part['name'],
-                :content_type => layout_part['content_type'],
-                :position => index+1,
-                :layout_id => layout_object.id
-              })
-              raise "Layout could not be saved in the database" unless layout_part_object.valid?
+              layout_part_object = LayoutPart.first(:conditions => {:name => layout_part['name'], :layout_id => layout_object.id})
+              if layout_part_object
+                layout_part_object.update_attributes!({
+                  :content_type => layout_part['content_type'],
+                  :position => index+1
+                })
+              else
+                layout_part_object = LayoutPart.create({
+                  :name => layout_part['name'],
+                  :content_type => layout_part['content_type'],
+                  :position => index+1,
+                  :layout_id => layout_object.id
+                })
+                raise "Layout could not be saved in the database" unless layout_part_object.valid?
+              end
             end
           end
 
